@@ -2,6 +2,18 @@
 import cv2
 
 def detectEyes(name, image):
+    ''' 
+    This function gets faces images,
+    detects faces to crop the image to speed up eye search,
+    than detects eyes and returns them.        
+    
+    Arguments:
+    
+    Returns:
+    
+    
+    '''
+    
     # load haarcascades
     face_cascade = cv2.CascadeClassifier('./haarcascades/haarcascade_frontalface_default.xml')
     eyeCascade = cv2.CascadeClassifier('./haarcascades/haarcascade_eye.xml')
@@ -24,9 +36,9 @@ def detectEyes(name, image):
         faces = [[0,0, clone.shape[1], clone.shape[0]]]
     print(faces)
     
-    # debugging: delete it later
-    faces_detected = "Лиц обнаружено: " + format(len(faces))
-    print(faces_detected)
+    # debug
+    #faces_detected = "Лиц обнаружено: " + format(len(faces))
+    #print(faces_detected)
 
     # draw rectangle around faces    
     for (x, y, w, h) in faces:
@@ -36,21 +48,22 @@ def detectEyes(name, image):
     eyesImages = []
     j=1
     for (x, y, w, h) in faces:
-        roi_gray = gray[y:y + h, x:x + w] # Вырезаем область с лицами
-        roi_color = image[y:y + h, x:x + w]
-        #cv2.rectangle(clone, (x, y), (x + w, y + h), (255, 0, 0), 2)    
+        # crop the area with faces
+        roi_gray = gray[y:y + h, x:x + w] 
+        roi_color = image[y:y + h, x:x + w]   
+        # find eyes
         eyes = eyeCascade.detectMultiScale(
-            roi_gray,              #
-            scaleFactor=1.2,       # Ищем глаза в области с лицом
+            roi_gray,              
+            scaleFactor=1.2,       
             minNeighbors=4,
             minSize=(150, 150),
         )        
+        # draw the area with eyes
         for (ex, ey, ew, eh) in eyes:
             img = roi_color[ey:ey + eh, ex:ex + ew]   
             eyesImages.append(name + '_eye' + str(j))
             cv2.imwrite('./labeled/detectFace/' + name + '_eye' + str(j) + '.jpg', img)
             j += 1
-            # Рисуем область глаз
             cv2.rectangle(roi_color, (ex, ey), (ex + ew, ey + eh), (0, 255, 0), 2)  
         cv2.imwrite('./labeled/detectFace/' + name + 'Labeled.jpg', roi_color)
         
