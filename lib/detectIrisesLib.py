@@ -2,7 +2,7 @@
 import numpy as np
 import cv2
 
-        
+
 def detectIrises(name, image):
     ''' 
     This function gets eyes images, then detects irises on processed images 

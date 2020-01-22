@@ -9,8 +9,7 @@ def detectEyes(name, image):
     
     Arguments:
     
-    Returns:
-    
+    Returns:  
     
     '''
     
