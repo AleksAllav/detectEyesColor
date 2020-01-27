@@ -14,13 +14,13 @@ def detectEyesColor(name, image):
     Returns:    
     
     '''
-    iris = image
-    if iris.size != 0:            
-        iris_hsv = cv2.cvtColor(iris, cv2.COLOR_BGR2HSV)
+    # TODO: add sorting irises by color and pass by wrong detected irises
+    if image.size != 0:            
+        iris_hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
         dom_color = getDominantColor(iris_hsv)
-        dom_color_hsv = np.full(iris.shape, dom_color, dtype='uint8')
+        dom_color_hsv = np.full(image.shape, dom_color, dtype='uint8')
         dom_color_bgr = cv2.cvtColor(dom_color_hsv, cv2.COLOR_HSV2BGR)
-        output_image = np.hstack((iris, dom_color_bgr))
+        output_image = np.hstack((image, dom_color_bgr))
         cv2.imwrite('./labeled/detectEyeColor/' + name + '_dominantEyeColor.jpg', output_image)
     
 def getDominantColor(image, k=4):
