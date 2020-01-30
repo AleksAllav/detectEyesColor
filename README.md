@@ -35,15 +35,15 @@ The detecting dominant color is performed by using the sklearn.cluster KMeans pa
 
 Good examples:
 
-<img src="https://github.com/AleksAllav/detectEyesColor/blob/master/pictures/eyeColors/face1.jpg" width="120">
+<img src="https://github.com/AleksAllav/detectEyesColor/blob/master/pictures/faces/face1.jpg" width="120">
 <img src="https://github.com/AleksAllav/detectEyesColor/blob/master/pictures/eyeColors/face1_eye2_grey_iris0_dominantEyeColor.jpg" width="120">
 
-<img src="https://github.com/AleksAllav/detectEyesColor/blob/master/pictures/eyeColors/face2.jpg" width="120">
+<img src="https://github.com/AleksAllav/detectEyesColor/blob/master/pictures/faces/face2.jpg" width="120">
 <img src="https://github.com/AleksAllav/detectEyesColor/blob/master/pictures/eyeColors/face2_eye2_grey_iris0_dominantEyeColor.jpg" width="120">
 
 The bad example:
 
-<img src="https://github.com/AleksAllav/detectEyesColor/blob/master/pictures/eyeColors/face3.jpg" width="120">
+<img src="https://github.com/AleksAllav/detectEyesColor/blob/master/pictures/faces/face3.jpg" width="120">
 <img src="https://github.com/AleksAllav/detectEyesColor/blob/master/pictures/eyeColors/face3_eye2_grey_iris0_dominantEyeColor.jpg" width="120">
 
 
