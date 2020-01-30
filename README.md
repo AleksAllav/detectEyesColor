@@ -1,88 +1,46 @@
-# Определитель цвета глаз
+# Eye color detection
 
-Программа выполняет поиск радужек на фотографиях лиц и определяет их доминантный цвет.  
+This program detects the color of a person's eyes from a photo of their face. The program executes it by this main steps:
 
-## Getting Started
+1. The searching faces,
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
+2. The searching eyes on the face,
 
-### Prerequisites
+3. The searching the iris on the eye,
 
-What things you need to install the software and how to install them
+4. The detecting dominant color on the iris.
 
-```
-Give examples
-```
 
-### Installing
+## More about each step
 
-A step by step series of examples that tell you how to get a development env running
+1. The searching faces:
 
-Say what the step will be
+Face search is performed by the method face_cascade.detectMultiScale(), where face_cascade is pre-trained classifiers for face from 'opencv/data/haarcascades/' folder. If face isn't detected by that method, the function returns whole image.
+This step is for narrowing area for eye search. 
 
-```
-Give the example
-```
+2. The searching eyes on face:
 
-And repeat
+Eyes search is same with searching faces.
 
-```
-until finished
-```
+3. The searching the iris on the eye:
 
-End with an example of getting some data out of the system or using it for a little demo
+Iris search uses another method. Firstly, the function converts eye's image to grayscale with using bilateralFilter (this method showed best results on tests). Secondly, circles are searched by method cv2.HoughCircles(). Tham function creates mask, finds the minimal bounding rect for every circle and returns croped masked data.
 
-## Running the tests
+4. The detecting dominant color on the iris:
 
-Explain how to run the automated tests for this system
+The detecting dominant color is performed by using the sklearn.cluster KMeans package.
 
-### Break down into end to end tests
 
-Explain what these tests test and why
+## Examples current perfoming
 
-```
-Give an example
-```
+Good examples:
 
-### And coding style tests
+<img src="https://github.com/AleksAllav/detectEyesColor/blob/master/pictures/eyeColors/face1_eye2_grey_iris0_dominantEyeColor.jpg" width="48">
 
-Explain what these tests test and why
+<img src="https://github.com/AleksAllav/detectEyesColor/blob/master/pictures/eyeColors/face2_eye2_grey_iris0_dominantEyeColor.jpg" width="48">
 
-```
-Give an example
-```
+The bad example:
 
-## Deployment
+<img src="https://github.com/AleksAllav/detectEyesColor/blob/master/pictures/eyeColors/face3_eye2_grey_iris0_dominantEyeColor.jpg" width="48">
 
-Add additional notes about how to deploy this on a live system
-
-## Built With
-
-* [Dropwizard](http://www.dropwizard.io/1.0.2/docs/) - The web framework used
-* [Maven](https://maven.apache.org/) - Dependency Management
-* [ROME](https://rometools.github.io/rome/) - Used to generate RSS Feeds
-
-## Contributing
-
-Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c63ec426) for details on our code of conduct, and the process for submitting pull requests to us.
-
-## Versioning
-
-We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/your/project/tags). 
-
-## Authors
-
-* **Billie Thompson** - *Initial work* - [PurpleBooth](https://github.com/PurpleBooth)
-
-See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
-
-## Acknowledgments
-
-* Hat tip to anyone whose code was used
-* Inspiration
-* etc
 
