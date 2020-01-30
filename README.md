@@ -24,14 +24,14 @@ Eyes search is same with searching faces.
 
 3. The searching the iris on the eye:
 
-Iris search uses another method. Firstly, the function converts eye's image to grayscale with using bilateralFilter (this method showed best results on tests). Secondly, circles are searched by method cv2.HoughCircles(). Tham function creates mask, finds the minimal bounding rect for every circle and returns croped masked data.
+Iris search uses another method. Firstly, the function converts eye's image to grayscale with using bilateralFilter (this method showed best results on tests). Secondly, circles are searched by method cv2.HoughCircles(). Than the function creates mask, finds the minimal bounding rect for every circle and returns cropped masked data.
 
 4. The detecting dominant color on the iris:
 
 The detecting dominant color is performed by using the sklearn.cluster KMeans package.
 
 
-## Examples current perfoming
+## Examples current performing
 
 Good examples:
 
