@@ -13,7 +13,8 @@ if __name__ == '__main__':
     # Detect eyes on images of faces and return images of eyes
     eyesImages = []
     for name in facesImages:
-        eyesImages.append(lib.detectEyesLib.detectEyes(name, cv2.imread('./pictures/faces/' + name + '.jpg')))
+        scinColor, currentEyesImages = lib.detectEyesLib.detectEyes(name, cv2.imread('./pictures/faces/' + name + '.jpg'))
+        eyesImages.append(currentEyesImages)
     
     # Debug 
     # eyesImages= ['eye1','eye2','eye3','eye4','eye5','eye6','eye7','eye8','eye9','eye10']

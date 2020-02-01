@@ -22,7 +22,8 @@ def detectEyesColor(name, image):
         dom_color_bgr = cv2.cvtColor(dom_color_hsv, cv2.COLOR_HSV2BGR)
         output_image = np.hstack((image, dom_color_bgr))
         cv2.imwrite('./labeled/detectEyeColor/' + name + '_dominantEyeColor.jpg', output_image)
-    
+
+
 def getDominantColor(image, k=4):
     image = image.reshape((image.shape[0] * image.shape[1], 3))
     clt = KMeans(n_clusters = k)

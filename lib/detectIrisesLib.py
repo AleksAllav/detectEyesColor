@@ -3,7 +3,7 @@ import numpy as np
 import cv2
 
 
-def detectIrises(name, image):
+def detectIrises(name, image, scinColor = None):
     ''' 
     This function gets eyes images, then detects irises on processed images  
     and returns irises which cropped by mask.  
