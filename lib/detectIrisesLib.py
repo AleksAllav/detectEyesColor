@@ -21,6 +21,7 @@ def detectIrises(name, image, scinColor = None):
     
     # Find irises and write them
     irisesImages = []
+    irisesImagesNames = []
     for i in range(len(images)):
         # Find iris on current image of eye
         irises = findCirclesByMask(image.copy(), images[i])
@@ -30,8 +31,11 @@ def detectIrises(name, image, scinColor = None):
         
         for j, iris in enumerate(irises):
             if iris.size != 0:
+                # Save images for transfer
+                irisesImages.append(iris)
+                # Debug for manual checking: save images of eyes
                 cv2.imwrite("./labeled/detectEye/" + name+ "_" + imagesName[i] + "_iris" + str(j) + ".jpg", iris)
-                irisesImages.append(name+ "_" + imagesName[i] + "_iris" + str(j))
+                irisesImagesNames.append(name+ "_" + imagesName[i] + "_iris" + str(j))
         
     return irisesImages
 

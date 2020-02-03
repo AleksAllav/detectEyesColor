@@ -36,29 +36,37 @@ def detectEyes(name, image):
         # Crop the area with faces
         roi_gray = gray[y : y + h, x : x + w] 
         roi_color = image[y : y + h, x : x + w]   
-        # Find eyes
+        
+        # Detect eyes
         eyes = eyeCascade.detectMultiScale(
             roi_gray,              
             scaleFactor = 1.2,       
             minNeighbors = 4,
             minSize = (150, 150)
-        )      
+        )  
+        
+        # Find scin color 
         scinColor = lib.detectEyesColorLib.getDominantColor(roi_color, k=4)
+        
         # Draw the area with eyes
-        for (ex, ey, ew, eh) in eyes:
-            eye = roi_color[ey : ey + eh, ex : ex + ew]   
+        for (ex, ey, ew, eh) in eyes: 
+            eye = roi_color[ey : ey + eh, ex : ex + ew]
+            cv2.rectangle(roi_color, (ex, ey), (ex + ew, ey + eh), (0, 255, 0), 2)
+                       
+            # Save images for transfer
             eyesImages.append(eye)
             
             # Debug for manual checking: save images of eyes
-            eyesImagesNames.append(name + '_eye' + str(j))
-            cv2.imwrite('./labeled/detectFace/' + name + '_eye' + str(j) + '.jpg', eye)
-            j += 1
-            cv2.rectangle(roi_color, (ex, ey), (ex + ew, ey + eh), (0, 255, 0), 2)  
+            #eyesImagesNames.append(name + '_eye' + str(j))
+            #cv2.imwrite('./labeled/detectFace/' + name + '_eye' + str(j) + '.jpg', eye)
+            #j += 1
+            
+            
         
         # Debug for manual checking: save labeled face and eyes
         cv2.imwrite('./labeled/detectFace/' + name + 'Labeled.jpg', roi_color)
         
-    return scinColor, eyesImagesNames
+    return scinColor, eyesImages
 
 
 def detectFaces(clone, gray):

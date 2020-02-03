@@ -15,20 +15,20 @@ if __name__ == '__main__':
     for name in facesImages:
         scinColor, currentEyesImages = lib.detectEyesLib.detectEyes(name, cv2.imread('./pictures/faces/' + name + '.jpg'))
         eyesImages.append(currentEyesImages)
+    print('Debug: The end of detecting eyes')
     
     # Debug 
     # eyesImages= ['eye1','eye2','eye3','eye4','eye5','eye6','eye7','eye8','eye9','eye10']
     
     # Load the image and return countours of irises 
     irisesImages = []
-    for _ in eyesImages:        
-        for name in _:
-            irisesImages.append(lib.detectIrisesLib.detectIrises(name, cv2.imread('./labeled/detectFace/' + name + '.jpg')))
-            # Debug
-            # DetectEye_findIrises.writeFindedCountoursOnEyes(name, cv2.imread('./labeled/detectFace/'+name+'.jpg'))               
+    for _ in eyesImages: 
+        for eye in _:
+            irisesImages.append(lib.detectIrisesLib.detectIrises(name, eye))            
+    print('Debug: The end of detecting irises')
     
     # Load the image of irises and the detect color of eye
-    for _ in irisesImages:        
-        for name in _:         
-            lib.detectEyesColorLib.detectEyesColor(name, cv2.imread('./labeled/detectEye/' + name + '.jpg'))    
-    
+    for _ in irisesImages:
+        for iris in _:
+            lib.detectEyesColorLib.detectEyesColor(name, iris)
+    print('Debug: The end of detecting eyes color')
