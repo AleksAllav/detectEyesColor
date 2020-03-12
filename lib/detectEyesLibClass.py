@@ -1,7 +1,7 @@
 # import the necessary packages
 import cv2
 import numpy as np
-import lib.detectEyesColorLib
+from lib import detectEyesColorLib
     
 class Face():    
     def __init__(self, image):
@@ -17,24 +17,20 @@ class Face():
         return face
     
     @property
-    def faceScinColor(self):
-        scinColor = lib.detectEyesColorLib.getDominantColor(self.image, k=4)
+    def scinColor(self):
+        scinColor = detectEyesColorLib.getDominantColor(self.image, k=4)
         return scinColor
     
     @property
     def eyes(self):
         eyes = detectEyes(self.image, self.gray, self.face)
         return eyes
-    
-class Irises():
-    def __init__(self, eyesImage):
-        self.images = eyesImage
         
     @property
     def eyesIrises(self):
         irises = []
-        for eye in self.images:
-            irises.append(detectIrises(eye))
+        for eye in self.eyes:
+            irises.append(detectIrises(eye, self.scinColor))
         return irises
             
             
@@ -108,7 +104,7 @@ def detectEyes(image, gray, faces):
     return eyesImages
 
 
-def detectIrises(eye):
+def detectIrises(eye, scinColor):
     ''' 
     This function gets eyes images, then detects irises on processed images  
     and returns irises which cropped by mask.  
@@ -127,9 +123,9 @@ def detectIrises(eye):
     # Find irises and write them
     irisesImages = []
     irisesImagesNames = []
-    for i in range(len(images)):
+    for image in images:
         # Find iris on current image of eye
-        irises = findCirclesByMask(eye.copy(), images[i])
+        irises = findCirclesByMask(eye.copy(), image, scinColor)
         
         # TODO: implement finding iris in circles
         # iris = findIris(circles)
@@ -151,7 +147,7 @@ def processImage(clone):
     
     return [grey], ['grey']
 
-def findCirclesByMask(image, changed):
+def findCirclesByMask(image, changed, scinColor):
         
     # Find circles 
     rows  = changed.shape[0]
@@ -163,17 +159,18 @@ def findCirclesByMask(image, changed):
     # Find all circles with using mask
     if circles is not None:
         circles = np.uint16(np.around(circles))
-        for i in circles[0, :]:
+        for x, y, radius in circles[0, :]:
+            center = (x, y)
             # Save original image
             clone = image.copy()
             
             # Create mask
             height,width,_ = clone.shape
             mask = np.zeros((height, width), np.uint8)
-            center = (i[0], i[1])
+            
             
             # Draw on mask
-            cv2.circle(mask, (i[0], i[1]), i[2],(255, 255, 255), thickness=-1)
+            cv2.circle(mask, center, radius,(255, 255, 255), thickness=-1)
             
             # Copy that image using that mask
             masked_data = cv2.bitwise_and(clone, clone, mask=mask)
@@ -184,10 +181,15 @@ def findCirclesByMask(image, changed):
             # Find contours
             contours, _ = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
-            for contour in contours:
+            for i, contour in enumerate(contours):
                 # Get the bounding rect
                 x, y, w, h = cv2.boundingRect(contour)
                 # Crop masked_data
-                crop.append(masked_data[y : y + h, x : x + w])
-        
+                iris = masked_data[y : y + h, x : x + w]
+                crop.append(iris)
+                dom_color = detectEyesColorLib.getDominantColor(iris,5)
+                dom_color_hsv = np.full(iris.shape, dom_color, dtype='uint8')
+                dom_color_bgr = cv2.cvtColor(dom_color_hsv, cv2.COLOR_HSV2BGR)
+                output_image = np.hstack((iris, dom_color_bgr))
+                cv2.imwrite('./labeled/detectEyeColor/' + str(x) + str(y) + '_dominantEyeColor.jpg', output_image)
     return crop
