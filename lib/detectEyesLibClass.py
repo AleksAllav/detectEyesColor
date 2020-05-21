@@ -2,18 +2,19 @@
 import cv2
 import numpy as np
 from lib import detectEyesColorLib
-    
-class Face():    
+
+
+class Face:
     def __init__(self, image):
         self.image = image
-        
+
         # Convert to grayscale
         self.gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    
+
     @property
     def face(self):
         face = detectFaces(self.image, self.gray)
-        #print(faces)
+        # print(faces)
         return face
     
     @property
@@ -53,13 +54,13 @@ def detectFaces(clone, gray):
     # Find faces
     faces = face_cascade.detectMultiScale(
         gray,
-        scaleFactor = 1.2,
-        minNeighbors = 8,
-        minSize = (20, 20)
+        scaleFactor=1.2,
+        minNeighbors=8,
+        minSize=(20, 20)
     )
     
     # Set face all image if face was not detected 
-    if len(faces)==0:
+    if len(faces) == 0:
         faces = [[0, 0, clone.shape[1], clone.shape[0]]]
         
     return faces
@@ -82,7 +83,7 @@ def detectEyes(image, gray, faces):
     # Find eyes
     eyesImages = []
     eyesImagesNames = []
-    j=1
+    j = 1
     for (x, y, w, h) in faces:
         # Crop the area with faces
         roi_gray = gray[y : y + h, x : x + w] 
@@ -90,15 +91,15 @@ def detectEyes(image, gray, faces):
         
         # Detect eyes
         eyes = eyeCascade.detectMultiScale(
-            roi_gray,              
-            scaleFactor = 1.2,       
-            minNeighbors = 4,
-            minSize = (150, 150)
+            roi_gray,
+            scaleFactor=1.2,
+            minNeighbors=4,
+            minSize=(150, 150)
         )  
         
         # Save images for transfer
-        for (ex, ey, ew, eh) in eyes: 
-            eye = roi_color[ey : ey + eh, ex : ex + ew]
+        for (ex, ey, ew, eh) in eyes:
+            eye = roi_color[ey: ey + eh, ex: ex + ew]
             eyesImages.append(eye)
                     
     return eyesImages
@@ -140,6 +141,7 @@ def detectIrises(eye, scinColor):
         
     return irisesImages       
 
+
 def processImage(clone):
     # Use bilateralFilter and convert to grayscale
     image = cv2.bilateralFilter(clone, 10, 100, 100)
@@ -147,13 +149,14 @@ def processImage(clone):
     
     return [grey], ['grey']
 
+
 def findCirclesByMask(image, changed, scinColor):
         
     # Find circles 
-    rows  = changed.shape[0]
-    circles = cv2.HoughCircles(changed, cv2.HOUGH_GRADIENT, 1, rows/8,
-                               param1 = 100, param2 = 30,
-                               minRadius = 10, maxRadius = 100)
+    rows = changed.shape[0]
+    circles = cv2.HoughCircles(changed, cv2.HOUGH_GRADIENT, 1, rows / 8,
+                               param1=100, param2=30,
+                               minRadius=10, maxRadius=100)
         
     crop = []    
     # Find all circles with using mask
@@ -165,12 +168,12 @@ def findCirclesByMask(image, changed, scinColor):
             clone = image.copy()
             
             # Create mask
-            height,width,_ = clone.shape
+            height, width, _ = clone.shape
             mask = np.zeros((height, width), np.uint8)
             
             
             # Draw on mask
-            cv2.circle(mask, center, radius,(255, 255, 255), thickness=-1)
+            cv2.circle(mask, center, radius, (255, 255, 255), thickness=-1)
             
             # Copy that image using that mask
             masked_data = cv2.bitwise_and(clone, clone, mask=mask)
@@ -185,7 +188,7 @@ def findCirclesByMask(image, changed, scinColor):
                 # Get the bounding rect
                 x, y, w, h = cv2.boundingRect(contour)
                 # Crop masked_data
-                iris = masked_data[y : y + h, x : x + w]
+                iris = masked_data[y: y + h, x: x + w]
                 crop.append(iris)
                 dom_color = detectEyesColorLib.getDominantColor(iris,5)
                 dom_color_hsv = np.full(iris.shape, dom_color, dtype='uint8')

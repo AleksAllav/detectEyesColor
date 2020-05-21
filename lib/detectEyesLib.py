@@ -1,7 +1,8 @@
 # import the necessary packages
 import cv2
 import lib.detectEyesColorLib
-    
+
+
 def detectEyes(name, image):
     '''
     This function detects eyes.   
@@ -31,26 +32,26 @@ def detectEyes(name, image):
     # Find eyes
     eyesImages = []
     eyesImagesNames = []
-    j=1
+    j = 1
     for (x, y, w, h) in faces:
         # Crop the area with faces
-        roi_gray = gray[y : y + h, x : x + w] 
-        roi_color = image[y : y + h, x : x + w]   
-        
+        roi_gray = gray[y: y + h, x: x + w]
+        roi_color = image[y: y + h, x: x + w]
+
         # Detect eyes
         eyes = eyeCascade.detectMultiScale(
-            roi_gray,              
-            scaleFactor = 1.2,       
-            minNeighbors = 4,
-            minSize = (150, 150)
-        )  
-        
+            roi_gray,
+            scaleFactor=1.2,
+            minNeighbors=4,
+            minSize=(150, 150)
+        )
+
         # Find scin color 
         scinColor = lib.detectEyesColorLib.getDominantColor(roi_color, k=4)
         
         # Draw the area with eyes
-        for (ex, ey, ew, eh) in eyes: 
-            eye = roi_color[ey : ey + eh, ex : ex + ew]
+        for (ex, ey, ew, eh) in eyes:
+            eye = roi_color[ey: ey + eh, ex: ex + ew]
             cv2.rectangle(roi_color, (ex, ey), (ex + ew, ey + eh), (0, 255, 0), 2)
                        
             # Save images for transfer
@@ -60,8 +61,7 @@ def detectEyes(name, image):
             #eyesImagesNames.append(name + '_eye' + str(j))
             #cv2.imwrite('./labeled/detectFace/' + name + '_eye' + str(j) + '.jpg', eye)
             #j += 1
-            
-            
+
         
         # Debug for manual checking: save labeled face and eyes
         cv2.imwrite('./labeled/detectFace/' + name + 'Labeled.jpg', roi_color)
@@ -88,13 +88,13 @@ def detectFaces(clone, gray):
     # Find faces
     faces = face_cascade.detectMultiScale(
         gray,
-        scaleFactor = 1.2,
-        minNeighbors = 8,
-        minSize = (20, 20)
+        scaleFactor=1.2,
+        minNeighbors=8,
+        minSize=(20, 20)
     )
     
     # Set face all image if face was not detected 
-    if len(faces)==0:
+    if len(faces) == 0:
         faces = [[0, 0, clone.shape[1], clone.shape[0]]]
     
     # Debug
@@ -103,4 +103,3 @@ def detectFaces(clone, gray):
     
     return faces
 
-        

@@ -3,7 +3,8 @@ import numpy as np
 from sklearn.cluster import KMeans
 from collections import Counter
 import cv2
-    
+
+
 def detectEyesColor(name, image):
     ''' 
     This function gets irises images, than gets dominant color on image,
@@ -26,9 +27,8 @@ def detectEyesColor(name, image):
 
 def getDominantColor(image, k=4):
     image = image.reshape((image.shape[0] * image.shape[1], 3))
-    clt = KMeans(n_clusters = k)
+    clt = KMeans(n_clusters=k)
     labels = clt.fit_predict(image)
     label_counts = Counter(labels)
     dominant_color = clt.cluster_centers_[label_counts.most_common(1)[0][0]]
     return list(dominant_color)
-        
