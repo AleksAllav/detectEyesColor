@@ -34,8 +34,8 @@ def detectIrises(name, image, scinColor = None):
                 # Save images for transfer
                 irisesImages.append(iris)
                 # Debug for manual checking: save images of eyes
-                cv2.imwrite("./labeled/detectEye/" + name+ "_" + imagesName[i] + "_iris" + str(j) + ".jpg", iris)
-                irisesImagesNames.append(name+ "_" + imagesName[i] + "_iris" + str(j))
+                cv2.imwrite("./labeled/detectEye/" + name + "_" + imagesName[i] + "_iris" + str(j) + ".jpg", iris)
+                irisesImagesNames.append(name + "_" + imagesName[i] + "_iris" + str(j))
         
     return irisesImages
 

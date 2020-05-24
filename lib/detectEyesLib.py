@@ -60,7 +60,6 @@ def detectEyes(name, image):
             # Debug for manual checking: save images of eyes
             #eyesImagesNames.append(name + '_eye' + str(j))
             #cv2.imwrite('./labeled/detectFace/' + name + '_eye' + str(j) + '.jpg', eye)
-            #j += 1
 
         
         # Debug for manual checking: save labeled face and eyes
