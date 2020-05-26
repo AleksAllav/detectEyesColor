@@ -18,10 +18,10 @@ if __name__ == '__main__':
     # Load images of faces
     facesImages = ('face1', 'face2', 'face3')
 
-    for j, name in enumerate(facesImages):
+    for i, name in enumerate(facesImages):
         irises_colors = Face(cv2.imread('./pictures/faces/' + name + '.jpg')).irises_color
         for iris in irises_colors:
-            # im = Image.fromarray(iris)
-            # im.save("./labeled/" + name + "_iris" + str(j) + ".jpg")
-            cv2.imwrite('./labeled/' + name + '_dominantEyeColor_' + str(j) + '.jpg', iris)
+            # im = Image.fromarray(irises_colors[0])
+            # im.save("./labeled/" + name + "_iris" + str(i) + ".jpg")
+            cv2.imwrite('./labeled/' + name + '_dominantEyeColor_' + str(i) + '.jpg', iris)
     print('Debug: The end of detecting eyes')

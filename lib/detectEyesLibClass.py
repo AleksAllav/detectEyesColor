@@ -14,35 +14,37 @@ class Face:
 
     @property
     def face(self):
-        face = FaceDetector.detect_faces(clone=self.image, gray=self.gray)
+        print('Face detecting started')
+        face = self.detect_faces(clone=self.image, gray=self.gray)
         return face
     
     @property
     def skin_color(self):
+        print('Skin color detecting started')
         skin_color = detectEyesColorLib.getDominantColor(self.image)
         return skin_color
-    
+
     @property
     def eyes(self):
-        eyes = FaceDetector.detect_eyes(self.image, self.gray, self.face)
+        print('Eyes detecting started')
+        eyes = self.detect_eyes(self.image, self.gray, self.face)
         return eyes
         
     @property
     def eyes_irises(self):
+        print('Irises detecting started')
         irises = []
         for eye in self.eyes:
-            irises.extend(FaceDetector.detect_irises(FaceDetector(), eye, self.skin_color))
+            irises.extend(self.detect_irises(eye, self.skin_color))
         return irises
 
     @property
     def irises_color(self):
+        print('Irises_color detecting started')
         irises_color = []
         for iris in self.eyes_irises:
-            irises_color.extend(FaceDetector.detect_eyes_color(FaceDetector(), iris))
+            irises_color.append(self.detect_eyes_color(iris))
         return irises_color
-            
-
-class FaceDetector:
 
     @staticmethod
     def detect_faces(clone, gray):
