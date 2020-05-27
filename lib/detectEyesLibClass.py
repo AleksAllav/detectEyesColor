@@ -11,18 +11,20 @@ class Face:
         self.image = image
         # Convert to grayscale
         self.gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+        self.skin_color = None
 
     @property
     def face(self):
         print('Face detecting started')
         face = self.detect_faces(clone=self.image, gray=self.gray)
         return face
-    
-    @property
+
+    # TODO: refactor decorators 'property'
+    # @property
     def skin_color(self):
         print('Skin color detecting started')
-        skin_color = detectEyesColorLib.getDominantColor(self.image)
-        return skin_color
+        self.skin_color = detectEyesColorLib.getDominantColor(self.image)
+        # return skin_color
 
     @property
     def eyes(self):
