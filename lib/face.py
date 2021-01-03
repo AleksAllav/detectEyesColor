@@ -3,7 +3,7 @@ import cv2
 import numpy as np
 from sklearn.cluster import KMeans
 from collections import Counter
-from lib import detectEyesColorLib
+from lib import eyes_color
 
 
 class Face:
@@ -23,7 +23,7 @@ class Face:
     # @property
     def skin_color(self):
         print('Skin color detecting started')
-        self.skin_color = detectEyesColorLib.getDominantColor(self.image)
+        self.skin_color = eyes_color.get_dominant_color(self.image)
         # return skin_color
 
     @property
@@ -198,7 +198,7 @@ class Face:
                     # Crop masked_data
                     iris = masked_data[y: y + h, x: x + w]
                     crop.append(iris)
-                    dom_color = detectEyesColorLib.get_dominant_color(iris, 5)
+                    dom_color = eyes_color.get_dominant_color(iris, 5)
                     dom_color_hsv = np.full(iris.shape, dom_color, dtype='uint8')
                     dom_color_bgr = cv2.cvtColor(dom_color_hsv, cv2.COLOR_HSV2BGR)
                     output_image = np.hstack((iris, dom_color_bgr))

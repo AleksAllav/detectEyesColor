@@ -1,6 +1,6 @@
 # import the necessary packages
 import cv2
-from lib import detectEyesColorLib
+from .eyes_color import get_dominant_color
 
 
 def detect_eyes(name, image):
@@ -47,7 +47,7 @@ def detect_eyes(name, image):
         )
 
         # Find scin color 
-        scinColor = detectEyesColorLib.get_dominant_color(roi_color, k=4)
+        scinColor = get_dominant_color(roi_color, k=4)
         
         # Draw the area with eyes
         for (ex, ey, ew, eh) in eyes:

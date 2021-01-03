@@ -5,6 +5,7 @@ from lib.detectEyesLibClass import Face
 from PIL import Image
 import scipy.misc
 
+
 if __name__ == '__main__':
 
     @classmethod

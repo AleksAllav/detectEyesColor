@@ -2,9 +2,9 @@
 import pathlib
 import cv2
 from lib import (
-    detectEyesLib,
-    detectIrisesLib,
-    detectEyesColorLib,
+    eyes,
+    irises,
+    eyes_color,
 )
 
 
@@ -17,7 +17,7 @@ if __name__ == '__main__':
     eyesImages = []
     for image in faces_images:
         name = image.resolve().stem
-        skinColor, currentEyesImages = detectEyesLib.detect_eyes(name, cv2.imread(str(image)))
+        skinColor, currentEyesImages = eyes.detect_eyes(name, cv2.imread(str(image)))
         eyesImages.append(currentEyesImages)
     print('Debug: The end of detecting eyes')
     
@@ -25,12 +25,12 @@ if __name__ == '__main__':
     irisesImages = []
     for current_face_eyes in eyesImages:
         for eye in current_face_eyes:
-            irisesImages.append(detectIrisesLib.detect_irises(name, eye))
+            irisesImages.append(irises.detect_irises(name, eye))
     print('Debug: The end of detecting irises')
     
     # Load the image of irises and the detected color of eye
     for i, current_face_irises in enumerate(irisesImages):
         for j, iris in enumerate(current_face_irises):
-            output_image = detectEyesColorLib.detect_eyes_color(name, iris)
+            output_image = eyes_color.detect_eyes_color(name, iris)
             cv2.imwrite('./pictures/labeled/detectedEyeColor_' + str(i) + str(j) + '_dominantEyeColor.jpg', output_image)
     print('Debug: The end of detecting eyes color')
