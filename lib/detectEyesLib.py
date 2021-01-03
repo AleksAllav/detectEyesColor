@@ -1,18 +1,18 @@
 # import the necessary packages
 import cv2
-import lib.detectEyesColorLib
+from lib import detectEyesColorLib
 
 
-def detectEyes(name, image):
-    '''
-    This function detects eyes.   
-    
+def detect_eyes(name, image):
+    """
+    This function detects eyes.
+
     Arguments:
-    
-    Returns:  
+
+    Returns:
     eyes images names
-    
-    '''
+
+    """
     
     # Load haarcascades
     eyeCascade = cv2.CascadeClassifier('./haarcascades/haarcascade_eye.xml')
@@ -23,7 +23,7 @@ def detectEyes(name, image):
     # Convert to grayscale
     gray = cv2.cvtColor(clone, cv2.COLOR_BGR2GRAY)
     
-    faces = detectFaces(clone, gray)
+    faces = detect_faces(clone, gray)
     
     # Debug: Draw rectangle around faces    
     for (x, y, w, h) in faces:
@@ -47,7 +47,7 @@ def detectEyes(name, image):
         )
 
         # Find scin color 
-        scinColor = lib.detectEyesColorLib.getDominantColor(roi_color, k=4)
+        scinColor = detectEyesColorLib.get_dominant_color(roi_color, k=4)
         
         # Draw the area with eyes
         for (ex, ey, ew, eh) in eyes:
@@ -68,18 +68,18 @@ def detectEyes(name, image):
     return scinColor, eyesImages
 
 
-def detectFaces(clone, gray):
-    ''' 
+def detect_faces(clone, gray):
+    """
     This function gets faces images,
-    detects faces to crop the image to speed up eye search.     
+    detects faces to crop the image to speed up eye search.
     If face isn't detected, the function returns original image shape.
-    
+
     Arguments:
-    
-    Returns:  
+
+    Returns:
     Faces coordinates
-    
-    '''
+
+    """
     
     # Load haarcascades
     face_cascade = cv2.CascadeClassifier('./haarcascades/haarcascade_frontalface_default.xml')
@@ -101,4 +101,3 @@ def detectFaces(clone, gray):
     #print(faces_detected)
     
     return faces
-

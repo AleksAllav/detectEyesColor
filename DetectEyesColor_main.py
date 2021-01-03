@@ -1,4 +1,5 @@
 # import the necessary packages
+import pathlib
 import cv2
 from lib import (
     detectEyesLib,
@@ -10,27 +11,26 @@ from lib import (
 if __name__ == '__main__':
     
     # Load images of faces
-    facesImages = ('face1', 'face2', 'face3')
+    faces_images = list(pathlib.Path('./pictures/faces/').glob('*.jpg'))
 
     # Detect eyes on images of faces and return images of eyes
     eyesImages = []
-    for name in facesImages:
-        skinColor, currentEyesImages = detectEyesLib.detectEyes(name, cv2.imread('./pictures/faces/' + name + '.jpg'))
+    for image in faces_images:
+        name = image.resolve().stem
+        skinColor, currentEyesImages = detectEyesLib.detect_eyes(name, cv2.imread(str(image)))
         eyesImages.append(currentEyesImages)
     print('Debug: The end of detecting eyes')
     
-    # Debug 
-    # eyesImages= ['eye1','eye2','eye3','eye4','eye5','eye6','eye7','eye8','eye9','eye10']
-    
-    # Load the image and return countours of irises 
+    # Load the image and return contours of irises
     irisesImages = []
-    for _ in eyesImages: 
-        for eye in _:
-            irisesImages.append(detectIrisesLib.detectIrises(name, eye))
+    for current_face_eyes in eyesImages:
+        for eye in current_face_eyes:
+            irisesImages.append(detectIrisesLib.detect_irises(name, eye))
     print('Debug: The end of detecting irises')
     
-    # Load the image of irises and the detect color of eye
-    for _ in irisesImages:
-        for iris in _:
-            detectEyesColorLib.detectEyesColor(name, iris)
+    # Load the image of irises and the detected color of eye
+    for i, current_face_irises in enumerate(irisesImages):
+        for j, iris in enumerate(current_face_irises):
+            output_image = detectEyesColorLib.detect_eyes_color(name, iris)
+            cv2.imwrite('./pictures/labeled/detectedEyeColor_' + str(i) + str(j) + '_dominantEyeColor.jpg', output_image)
     print('Debug: The end of detecting eyes color')

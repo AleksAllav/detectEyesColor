@@ -3,32 +3,32 @@ import numpy as np
 import cv2
 
 
-def detectIrises(name, image, scinColor = None):
-    ''' 
-    This function gets eyes images, then detects irises on processed images  
-    and returns irises which cropped by mask.  
-    
+def detect_irises(name, image, scinColor=None):
+    """
+    This function gets eyes images, then detects irises on processed images
+    and returns irises which cropped by mask.
+
     Arguments:
-    
+
     Returns:
-    
-    '''       
-    
+
+    """
+
     clone = image.copy()
-    
+
     # Get processed images
-    images, imagesName = processImage(clone)
-    
+    images, imagesName = process_image(clone)
+
     # Find irises and write them
     irisesImages = []
     irisesImagesNames = []
     for i in range(len(images)):
         # Find iris on current image of eye
-        irises = findCirclesByMask(image.copy(), images[i])
-        
+        irises = find_circles_by_mask(image.copy(), images[i])
+
         # TODO: implement finding iris in circles
         # iris = findIris(circles)
-        
+
         for j, iris in enumerate(irises):
             if iris.size != 0:
                 # Save images for transfer
@@ -36,42 +36,41 @@ def detectIrises(name, image, scinColor = None):
                 # Debug for manual checking: save images of eyes
                 cv2.imwrite("./labeled/detectEye/" + name + "_" + imagesName[i] + "_iris" + str(j) + ".jpg", iris)
                 irisesImagesNames.append(name + "_" + imagesName[i] + "_iris" + str(j))
-        
+
     return irisesImages
 
 
-def processImage(clone):
+def process_image(clone):
     # Use bilateralFilter and convert to grayscale
     image = cv2.bilateralFilter(clone, 10, 100, 100)
     grey = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    
+
     return [grey], ['grey']
 
 
-def findCirclesByMask(image, changed):
-        
-    # Find circles 
+def find_circles_by_mask(image, changed):
+    # Find circles
     rows = changed.shape[0]
     circles = cv2.HoughCircles(changed, cv2.HOUGH_GRADIENT, 1, rows / 8,
                                param1=100, param2=30,
                                minRadius=10, maxRadius=100)
-        
-    crop = []    
+
+    crop = []
     # Find all circles with using mask
     if circles is not None:
         circles = np.uint16(np.around(circles))
         for i in circles[0, :]:
             # Save original image
             clone = image.copy()
-            
+
             # Create mask
             height, width, _ = clone.shape
             mask = np.zeros((height, width), np.uint8)
             center = (i[0], i[1])
-            
+
             # Draw on mask
             cv2.circle(mask, (i[0], i[1]), i[2], (255, 255, 255), thickness=-1)
-            
+
             # Copy that image using that mask
             masked_data = cv2.bitwise_and(clone, clone, mask=mask)
 
@@ -86,12 +85,12 @@ def findCirclesByMask(image, changed):
                 x, y, w, h = cv2.boundingRect(contour)
                 # Crop masked_data
                 crop.append(masked_data[y: y + h, x: x + w])
-        
+
     return crop
 
 
 # TODO:
-def findIris(circles):
+def find_iris(circles):
     ''' 
     This function finds iris in circles.
     The function discards uncorrected circles by the color of the face and also function shouldn't count the color of the pupil.
@@ -100,7 +99,7 @@ def findIris(circles):
 
 
 # debug function
-def findMethod(clone):    
+def find_method(clone):
     # Convert to grayscale
     gray = cv2.cvtColor(clone, cv2.COLOR_BGR2GRAY)
     blurred = cv2.GaussianBlur(gray, (5, 5), 0)
@@ -121,33 +120,34 @@ def findMethod(clone):
 
     # Find edges
     edge_detected_image = cv2.Canny(bilateral_filtered_image, 75, 200)
-    
-    images = [gray, blurred, thresh, img, grey, adthresh, bilateral_filtered_image, edge_detected_image] 
-    imagesName = ['gray', 'blurred', 'thresh', 'img', 'grey', 'adthresh', 'bilateral_filtered_image', 'edge_detected_image'] 
-    
+
+    images = [gray, blurred, thresh, img, grey, adthresh, bilateral_filtered_image, edge_detected_image]
+    imagesName = ['gray', 'blurred', 'thresh', 'img', 'grey', 'adthresh', 'bilateral_filtered_image',
+                  'edge_detected_image']
+
     return images, imagesName
 
 
 # Debug function
-def findCountours(clone, changed):
+def find_contours(clone, changed):
     # Find all contours 
     contours, _ = cv2.findContours(changed, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
     contour_list = []
     for contour in contours:
-        approx = cv2.approxPolyDP(contour, 0.01*cv2.arcLength(contour, True), True)
+        approx = cv2.approxPolyDP(contour, 0.01 * cv2.arcLength(contour, True), True)
         area = cv2.contourArea(contour)
         if (len(approx) > 8) & (50000 > area > 10000):
             contour_list.append(contour)
-            
+
     # Draw contours
     cv2.drawContours(clone, contour_list, -1, (255, 0, 0), 5)
     return clone
 
 
 # Debug function
-def findCircles(clone, changed):
+def find_circles(clone, changed):
     # Find circles 
-    rows  = changed.shape[0]
+    rows = changed.shape[0]
     circles = cv2.HoughCircles(changed, cv2.HOUGH_GRADIENT, 1, rows / 8,
                                param1=100, param2=30,
                                minRadius=10, maxRadius=100)
@@ -165,20 +165,26 @@ def findCircles(clone, changed):
 
 
 # Debug function
-def writeFindedCountoursOnEyes(name, image):
+def write_found_contours_in_eyes(name, image):
     # Resize it to a smaller factor so that
     # the shapes can be approximated better
-    
-    #resized = imutils.resize(image, width=300)
-    #ratio = image.shape[0] / float(resized.shape[0])
+
+    # resized = imutils.resize(image, width=300)
+    # ratio = image.shape[0] / float(resized.shape[0])
     resized = image
     clone = resized.copy()
 
-    images, imagesName = findMethod(clone)
+    images, imagesName = find_method(clone)
     for i in range(len(images)):
-        cv2.imwrite("./labeled/detectEye/" + name + "_" + imagesName[i] + ".jpg", images[i])
+        cv2.imwrite(
+            "./labeled/detectEye/" + name + "_" + imagesName[i] + ".jpg", images[i]
+        )
         # imPath = "./labeled/detectEye/" + imagesName[i] + "_circling.jpg"
-        cv2.imwrite("./labeled/detectEye/" + name + "_" + imagesName[i] + "_circling.jpg",
-                    findCircles(resized.copy(), images[i]))
-        cv2.imwrite("./labeled/detectEye/" + name + "_" + imagesName[i] + "_countering.jpg",
-                    findCountours(resized.copy(), images[i]))
+        cv2.imwrite(
+            "./labeled/detectEye/" + name + "_" + imagesName[i] + "_circling.jpg",
+            find_circles(resized.copy(), images[i])
+        )
+        cv2.imwrite(
+            "./labeled/detectEye/" + name + "_" + imagesName[i] + "_countering.jpg",
+            find_contours(resized.copy(), images[i])
+        )

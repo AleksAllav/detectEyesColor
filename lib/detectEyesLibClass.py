@@ -198,7 +198,7 @@ class Face:
                     # Crop masked_data
                     iris = masked_data[y: y + h, x: x + w]
                     crop.append(iris)
-                    dom_color = detectEyesColorLib.getDominantColor(iris,5)
+                    dom_color = detectEyesColorLib.get_dominant_color(iris, 5)
                     dom_color_hsv = np.full(iris.shape, dom_color, dtype='uint8')
                     dom_color_bgr = cv2.cvtColor(dom_color_hsv, cv2.COLOR_HSV2BGR)
                     output_image = np.hstack((iris, dom_color_bgr))
