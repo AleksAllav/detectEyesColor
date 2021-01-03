@@ -16,7 +16,7 @@ def detect_eyes(name, image):
     """
     
     # Load haarcascades
-    eyeCascade = cv2.CascadeClassifier('./haarcascades/haarcascade_eye.xml')
+    eye_cascade = cv2.CascadeClassifier('./haarcascades/haarcascade_eye.xml')
     
     # Save original image
     clone = image.copy()
@@ -31,8 +31,7 @@ def detect_eyes(name, image):
         cv2.rectangle(clone, (x, y), (x+w, y+h), (255, 255, 0), 2)  
 
     # Find eyes
-    eyesImages = []
-    eyesImagesNames = []
+    eyes_images = []
     j = 1
     for (x, y, w, h) in faces:
         # Crop the area with faces
@@ -40,7 +39,7 @@ def detect_eyes(name, image):
         roi_color = image[y: y + h, x: x + w]
 
         # Detect eyes
-        eyes = eyeCascade.detectMultiScale(
+        eyes = eye_cascade.detectMultiScale(
             roi_gray,
             scaleFactor=1.2,
             minNeighbors=4,
@@ -48,7 +47,7 @@ def detect_eyes(name, image):
         )
 
         # Find scin color 
-        scinColor = get_dominant_color(roi_color, k=4)
+        skin_color = get_dominant_color(roi_color, k=4)
         
         # Draw the area with eyes
         for (ex, ey, ew, eh) in eyes:
@@ -56,17 +55,16 @@ def detect_eyes(name, image):
             cv2.rectangle(roi_color, (ex, ey), (ex + ew, ey + eh), (0, 255, 0), 2)
                        
             # Save images for transfer
-            eyesImages.append(eye)
+            eyes_images.append(eye)
             
             # Debug for manual checking: save images of eyes
             # eyesImagesNames.append(name + '_eye' + str(j))
             # cv2.imwrite('./labeled/detectFace/' + name + '_eye' + str(j) + '.jpg', eye)
 
-        
         # Debug for manual checking: save labeled face and eyes
-        cv2.imwrite('./labeled/detectFace/' + name + 'Labeled.jpg', roi_color)
+        cv2.imwrite('./pictures/labeled/detectFace_' + name + '_labeled.jpg', roi_color)
         
-    return scinColor, eyesImages
+    return skin_color, eyes_images
 
 
 def detect_faces(clone, gray):
@@ -98,7 +96,7 @@ def detect_faces(clone, gray):
         faces = [[0, 0, clone.shape[1], clone.shape[0]]]
     
     # Debug
-    #faces_detected = "Лиц обнаружено: " + format(len(faces))
-    #print(faces_detected)
+    # faces_detected = "Лиц обнаружено: " + format(len(faces))
+    # print(faces_detected)
     
     return faces

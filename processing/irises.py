@@ -3,7 +3,7 @@ import cv2
 import numpy as np
 
 
-def detect_irises(name, image, scinColor=None):
+def detect_irises(name, image, skin_color=None):
     """
     This function gets eyes images, then detects irises on processed images
     and returns irises which cropped by mask.
@@ -17,11 +17,11 @@ def detect_irises(name, image, scinColor=None):
     clone = image.copy()
 
     # Get processed images
-    images, imagesName = process_image(clone)
+    images, images_name = process_image(clone)
 
     # Find irises and write them
-    irisesImages = []
-    irisesImagesNames = []
+    irises_images = []
+    irises_images_names = []
     for i in range(len(images)):
         # Find iris on current image of eye
         irises = find_circles_by_mask(image.copy(), images[i])
@@ -32,12 +32,12 @@ def detect_irises(name, image, scinColor=None):
         for j, iris in enumerate(irises):
             if iris.size != 0:
                 # Save images for transfer
-                irisesImages.append(iris)
+                irises_images.append(iris)
                 # Debug for manual checking: save images of eyes
-                cv2.imwrite("./labeled/detectEye/" + name + "_" + imagesName[i] + "_iris" + str(j) + ".jpg", iris)
-                irisesImagesNames.append(name + "_" + imagesName[i] + "_iris" + str(j))
+                cv2.imwrite("./labeled/detectEye/" + name + "_" + images_name[i] + "_iris" + str(j) + ".jpg", iris)
+                irises_images_names.append(name + "_" + images_name[i] + "_iris" + str(j))
 
-    return irisesImages
+    return irises_images_names
 
 
 def process_image(clone):
@@ -122,10 +122,10 @@ def find_method(clone):
     edge_detected_image = cv2.Canny(bilateral_filtered_image, 75, 200)
 
     images = [gray, blurred, thresh, img, grey, adthresh, bilateral_filtered_image, edge_detected_image]
-    imagesName = ['gray', 'blurred', 'thresh', 'img', 'grey', 'adthresh', 'bilateral_filtered_image',
+    images_name = ['gray', 'blurred', 'thresh', 'img', 'grey', 'adthresh', 'bilateral_filtered_image',
                   'edge_detected_image']
 
-    return images, imagesName
+    return images, images_name
 
 
 # Debug function
@@ -174,17 +174,17 @@ def write_found_contours_in_eyes(name, image):
     resized = image
     clone = resized.copy()
 
-    images, imagesName = find_method(clone)
+    images, images_name = find_method(clone)
     for i in range(len(images)):
         cv2.imwrite(
-            "./labeled/detectEye/" + name + "_" + imagesName[i] + ".jpg", images[i]
+            "./labeled/detectEye/" + name + "_" + images_name[i] + ".jpg", images[i]
         )
         # imPath = "./labeled/detectEye/" + imagesName[i] + "_circling.jpg"
         cv2.imwrite(
-            "./labeled/detectEye/" + name + "_" + imagesName[i] + "_circling.jpg",
+            "./labeled/detectEye/" + name + "_" + images_name[i] + "_circling.jpg",
             find_circles(resized.copy(), images[i])
         )
         cv2.imwrite(
-            "./labeled/detectEye/" + name + "_" + imagesName[i] + "_countering.jpg",
+            "./labeled/detectEye/" + name + "_" + images_name[i] + "_countering.jpg",
             find_contours(resized.copy(), images[i])
         )
