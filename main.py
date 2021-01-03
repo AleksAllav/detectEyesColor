@@ -1,12 +1,8 @@
 # import the necessary packages
 import pathlib
-import cv2
-from lib import (
-    eyes,
-    irises,
-    eyes_color,
-)
 
+import cv2
+from lib import eyes, eyes_color, irises
 
 if __name__ == '__main__':
     

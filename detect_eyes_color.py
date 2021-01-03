@@ -1,10 +1,10 @@
 # import the necessary packages
 import os
+
 import cv2
+import scipy.misc
 from lib.detectEyesLibClass import Face
 from PIL import Image
-import scipy.misc
-
 
 if __name__ == '__main__':
 
